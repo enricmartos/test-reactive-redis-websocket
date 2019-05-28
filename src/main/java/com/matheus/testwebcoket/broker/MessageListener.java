@@ -1,9 +1,8 @@
-package com.matheus.testwebcoket.broken;
+package com.matheus.testwebcoket.broker;
 
 import com.matheus.testwebcoket.subscriber.Subscriber;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class MessageListener {
