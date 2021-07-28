@@ -1,6 +1,6 @@
 package com.matheus.testwebcoket.controller;
 
-import com.matheus.testwebcoket.model.Message;
+import com.matheus.testwebcoket.model.ChatMessage;
 import com.matheus.testwebcoket.publisher.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,10 @@ public class PublishController {
 	public void publish(@PathVariable final String chatMessage, @PathVariable final String userId) {
 		LOGGER.info(">> publish() chatMessage {} userId {}", chatMessage, userId);
 
-		publisher.send(chatMessage, userId);
+		ChatMessage message = new ChatMessage();
+		message.setText(chatMessage);
+
+		publisher.send(userId, message);
 
 		LOGGER.info("<< publish()");
 	}

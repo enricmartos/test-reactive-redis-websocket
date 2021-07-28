@@ -1,21 +1,21 @@
 package com.matheus.testwebcoket.publisher;
 
-import java.time.Instant;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import com.matheus.testwebcoket.model.ChatMessage;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Publisher {
 
-  private ReactiveRedisTemplate reactiveRedisTemplate;
+  private final ReactiveStringRedisTemplate reactiveRedisTemplate;
 
-  public Publisher(ReactiveRedisTemplate reactiveRedisTemplate) {
+  public Publisher(ReactiveStringRedisTemplate reactiveRedisTemplate) {
     this.reactiveRedisTemplate = reactiveRedisTemplate;
   }
 
-  public void send(String message, String topic) {
+  public void send(String topic, ChatMessage message) {
     reactiveRedisTemplate
-        .convertAndSend(topic, "Message is: " + message)
+        .convertAndSend(topic, message.getText())
         .subscribe();
   }
 }
