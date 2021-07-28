@@ -1,11 +1,16 @@
 package com.matheus.testwebcoket.broker;
 
 import com.matheus.testwebcoket.subscriber.Subscriber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
+
 @Controller
 public class MessageListener {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class.getName());
 
   private Subscriber subscriber;
 
@@ -15,7 +20,7 @@ public class MessageListener {
 
   @MessageMapping("/ws")
   public void read(String topic) {
-    System.out.println(topic);
+    LOGGER.info("Listening to topic {}", topic);
 
     subscriber.listener(topic);
   }

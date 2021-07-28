@@ -1,5 +1,7 @@
 package com.matheus.testwebcoket.subscriber;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.ReactiveSubscription.Message;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.ReactiveRedisMessageListenerContainer;
@@ -10,24 +12,26 @@ import reactor.core.publisher.Flux;
 @Component
 public class Subscriber {
 
-  private ReactiveRedisMessageListenerContainer reactiveRedisMessageListenerContainer;
-  private SimpMessagingTemplate simpMessagingTemplate;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Subscriber.class.getName());
 
-  public Subscriber(ReactiveRedisMessageListenerContainer reactiveRedisMessageListenerContainer,
-      SimpMessagingTemplate simpMessagingTemplate) {
-    this.reactiveRedisMessageListenerContainer = reactiveRedisMessageListenerContainer;
-    this.simpMessagingTemplate = simpMessagingTemplate;
-  }
+	private final ReactiveRedisMessageListenerContainer reactiveRedisMessageListenerContainer;
+	private final SimpMessagingTemplate simpMessagingTemplate;
 
-  public void listener(String topic) {
-    Flux<Message<String, String>> messageFlux =
-        reactiveRedisMessageListenerContainer.receive(ChannelTopic.of(topic));
+	public Subscriber(ReactiveRedisMessageListenerContainer reactiveRedisMessageListenerContainer,
+					  SimpMessagingTemplate simpMessagingTemplate) {
+		this.reactiveRedisMessageListenerContainer = reactiveRedisMessageListenerContainer;
+		this.simpMessagingTemplate = simpMessagingTemplate;
+	}
 
-    messageFlux
-        .doOnNext(msg -> {
-          System.out.println("New msg: " + msg);
-          simpMessagingTemplate.convertAndSend("/prefix/status/" + msg.getChannel(), msg.getMessage());
-        })
-        .subscribe();
-  }
+	public void listener(String topic) {
+		Flux<Message<String, String>> messageFlux =
+				reactiveRedisMessageListenerContainer.receive(ChannelTopic.of(topic));
+
+		messageFlux
+				.doOnNext(msg -> {
+					LOGGER.info("Published new message {} to channel topic {}", msg, topic);
+					simpMessagingTemplate.convertAndSend("/prefix/status/" + msg.getChannel(), msg.getMessage());
+				})
+				.subscribe();
+	}
 }
