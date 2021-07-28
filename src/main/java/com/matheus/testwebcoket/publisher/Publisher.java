@@ -13,9 +13,9 @@ public class Publisher {
     this.reactiveRedisTemplate = reactiveRedisTemplate;
   }
 
-  public void send(String topic) {
+  public void send(String message, String topic) {
     reactiveRedisTemplate
-        .convertAndSend(topic, "Hello! " + Instant.now().toString())
+        .convertAndSend(topic, "Message is: " + message)
         .subscribe();
   }
 }

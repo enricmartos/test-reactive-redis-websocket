@@ -12,8 +12,8 @@ public class FakePublisher {
     this.publisher = publisher;
   }
 
-  @Scheduled(fixedDelay = 30000)
+//  @Scheduled(fixedDelay = 30000)
   public void publish() {
-    publisher.send("matheus");
+    publisher.send("fake topic", "fake message");
   }
 }
